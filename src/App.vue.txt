@@ -1,0 +1,151 @@
+<template>
+  <div>{{message}}</div>
+  <button @click="handleClick">点击</button>
+  <div v-html="vHTML"></div>
+  <div v-bind:key="item" v-for="item in aa">{{ item }}</div>
+
+  <hr>
+  <div>{{ nickname }} -- {{ age }}</div>
+  <button @click="change">change</button>
+
+  <hr>
+  <div>{{_name}}</div>
+  <table border width="800px">
+    <thead>
+      <tr align="center"><td>名字</td><td>数量</td><td>单价</td><td>操作</td></tr>
+    </thead>
+    <tbody>
+      <tr align="center" v-bind:key="index" v-for="(item, index) in cartData">
+        <td>{{item.name}}</td>
+        <td>
+          <button @click="addAndSub(item, false)">-</button>
+          {{item.num}}
+          <button @click="addAndSub(item, true)">+</button>
+        </td>
+        <td>{{item.num * item.price}}</td>
+        <td @click="del(index)">删除</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr align="center"><td></td><td></td><td></td><td>总价:{{ $total }}</td></tr>
+    </tfoot>
+  </table>
+</template>
+
+<script setup lang="ts">
+import { ref, Ref, isRef, shallowRef, triggerRef, customRef, reactive, toRef, toRefs, computed, watch } from 'vue'
+
+const content:Ref<string> = ref('名字')
+// const handleClick = ()=>{
+//   content.value = '年龄'
+//   console.log(isRef(content))
+// }
+
+const aa:Ref<number[]> = myRef([1,2,3,4,5,7,8,9,0,235246])
+console.log(isRef(aa))
+
+const vHTML = '<div>header!!!</div>'
+
+//shallowRef
+let message = shallowRef({
+  name:'xiaoman'
+})
+const handleClick = ()=>{
+  // message.value = {
+  //   name: 'jingyu'
+  // }
+
+  message.value.name='dedecms'
+  triggerRef(message)
+
+  console.log(message)
+}
+
+function myRef<T>(value:T){
+  return customRef<T>((track, trigger)=>{
+    return {
+      get(){
+        track()
+        return value
+      },
+      set(newVal:T){
+        value = newVal
+        trigger()
+      } 
+    }
+  })
+}
+
+const info = reactive({
+  nickname: 'pzzrudlf',
+  age: 32
+})
+let {nickname, age} = toRefs(info)
+
+const change = ()=>{
+  nickname.value = 'spotify'
+  age.value = 45
+}
+
+const _name = computed(()=>{
+  return `${info.nickname}====${info.age}`
+})
+
+
+let $total = ref(0)
+type Cart = {
+  name: string,
+  num: number,
+  price: number
+}
+
+const cartData = reactive<Cart[]>([
+  {
+    name: '梨',
+    num: 2,
+    price: 8.00
+  },
+  {
+    name: '苹果',
+    num: 1,
+    price: 2.00
+  },
+  {
+    name: '香蕉',
+    num: 3,
+    price: 9999
+  }
+])
+
+const addAndSub = (item: Cart, flag: boolean):void=>{
+  if(item.num > 1 && !flag){
+    item.num--
+  }
+  if(item.num<99 && flag){
+    item.num++
+  }
+  // total()
+}
+
+const del = (index:number)=>{
+  cartData.splice(index, 1)
+  // total()
+}
+
+// 常规方式: 函数调用
+const total = ()=>{
+  $total.value = cartData.reduce((prev, next)=>{
+    return prev + (next.num*next.price)
+  }, 0)
+}
+
+// computed调用
+$total = computed<number>(()=>{
+  return cartData.reduce((prev, next)=>{
+    return prev + (next.num * next.price)
+  }, 0)
+})
+
+
+// watch()
+</script>
