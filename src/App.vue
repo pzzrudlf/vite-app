@@ -3,7 +3,7 @@
     <Layout></Layout>
 </template>
 <script setup lang="ts">
-import Layout from './layout/index.vue'
+import Layout from './layouts/index.vue'
 import HelloWorldVue from './components/HelloWorld.vue'
 
 </script>
