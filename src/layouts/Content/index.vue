@@ -16,6 +16,7 @@
                 <div>我被插入到footer部分</div>
             </template>
         </Dialog>
+        <el-input class="ipt"></el-input>
         <Suspense>
             <template #default>
                 <Aa></Aa>
@@ -78,5 +79,11 @@ export default {
     &-items{
         padding: 20px;
     }
+    .ipt {
+        :deep(input) {
+            background-color: gray;
+        }
+    }
 }
+
 </style>
