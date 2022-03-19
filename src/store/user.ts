@@ -21,8 +21,8 @@ export const useUserStore = defineStore('user', {
     },
     // computed 修改state的值, 有缓存的
     getters: {
-        newName():string {
-            return `$-${this.name}`
+        newName(state):string {
+            return `$-${this.name}`+`${state.age}`
         },
         getAge: (state)=>{
             return state.age
