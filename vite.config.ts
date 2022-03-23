@@ -14,5 +14,11 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()],
     })
-  ]
+  ],
+  server: {
+    proxy: {
+      // add proxy to fix cors
+      '/api': 'http://localhost:8088'
+    }
+  }
 })

@@ -1,4 +1,5 @@
 <template>
+    <div>大大大多</div>
     <div v-for="item in list">{{ item.name }}</div> 
 </template>
 <script setup lang="ts">
